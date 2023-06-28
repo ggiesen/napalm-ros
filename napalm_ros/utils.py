@@ -1,10 +1,15 @@
+import re
+
 from napalm.base.helpers import (
     ip as cast_ip,
 )
 
 
 def rtt(key, iterable):
-    return (float(row.get(key, '-1ms').replace('ms', '')) for row in iterable)
+    return (
+        float(re.sub(r'([0-9]+)ms(?:([0-9]+)+us)?', r'\1.\2', row.get(key, '-1ms')))
+        for row in iterable
+    )
 
 
 def to_seconds(time_format):

@@ -503,7 +503,13 @@ class ROSDriver(NetworkDriver):
             'packet_loss': max(row['packet-loss'] for row in results),
             'rtt_min': min(rtt('min-rtt', results)),
             'rtt_max': max(rtt('max-rtt', results)),  # Last result has calculated avg
-            'rtt_avg': float(results[-1].get('avg-rtt', '-1ms').replace('ms', '')),
+            'rtt_avg': float(
+                re.sub(
+                    r'([0-9]+)ms(?:([0-9]+)+us)?',
+                    r'\1.\2',
+                    results[-1].get('avg-rtt', '-1ms'),
+                )
+            ),
             'rtt_stddev': float(-1),
             'results': []
         }
@@ -511,7 +517,13 @@ class ROSDriver(NetworkDriver):
         for row in results:
             ping_results['results'].append({
                 'ip_address': cast_ip(row['host']),
-                'rtt': float(row.get('time', '-1ms').replace('ms', '')),
+                'rtt': float(
+                    re.sub(
+                        r'([0-9]+)ms(?:([0-9]+)+us)?',
+                        r'\1.\2',
+                        row.get('time', '-1ms'),
+                    )
+                ),
             })
 
         return dict(success=ping_results)
