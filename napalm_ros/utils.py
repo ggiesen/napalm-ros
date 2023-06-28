@@ -7,7 +7,7 @@ from napalm.base.helpers import (
 
 def rtt(key, iterable):
     return (
-        float(re.sub(r'([0-9]+)ms(?:([0-9]+)+us)?', r'\1.\2', row.get(key, '-1ms')))
+        float(re.sub(r'(?:([0-9]+)ms)?(?:([0-9]+)+us)?', r'\1.\2', row.get(key, '-1ms'), 1))
         for row in iterable
     )
 

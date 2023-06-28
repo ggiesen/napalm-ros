@@ -505,9 +505,10 @@ class ROSDriver(NetworkDriver):
             'rtt_max': max(rtt('max-rtt', results)),  # Last result has calculated avg
             'rtt_avg': float(
                 re.sub(
-                    r'([0-9]+)ms(?:([0-9]+)+us)?',
+                    r'(?:([0-9]+)ms)?(?:([0-9]+)+us)?',
                     r'\1.\2',
                     results[-1].get('avg-rtt', '-1ms'),
+                    1,
                 )
             ),
             'rtt_stddev': float(-1),
@@ -519,9 +520,10 @@ class ROSDriver(NetworkDriver):
                 'ip_address': cast_ip(row['host']),
                 'rtt': float(
                     re.sub(
-                        r'([0-9]+)ms(?:([0-9]+)+us)?',
+                        r'(?:([0-9]+)ms)?(?:([0-9]+)+us)?',
                         r'\1.\2',
                         row.get('time', '-1ms'),
+                        1,
                     )
                 ),
             })
